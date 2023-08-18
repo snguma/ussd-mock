@@ -13,7 +13,7 @@
     </div>
     <div class="overlay" v-show="callingInterface">
         <div class="calling-info">
-            <h2>Live USSD</h2>
+            <h2>{{ this.environment }} USSD</h2>
             <p>{{ this.dialCode }}</p>
             <small>Calling</small>
         </div>
@@ -60,6 +60,7 @@ export default {
             callingInterface: false,
             resultInterface: false,
             backendResponse: "",
+            environment: AppUtils.getEnvironment(),
             maxDigits: 10,
             sessionId: null,
             digits: [
@@ -79,16 +80,6 @@ export default {
         };
     },
     methods: {
-        generateSessionId() {
-            let text = ""
-            let chars = "abcdefghjklmnpqrstuvwxyz123456789"
-
-            for (let i = 0; i < 10; i++) {
-                text += chars.charAt(Math.floor(Math.random() * chars.length))
-            }
-
-            return text.toUpperCase()
-        },
         appendDigit(digit) {
             if (this.dialCode.length < this.maxDigits) {
                 this.dialCode += digit.number;
@@ -98,17 +89,19 @@ export default {
             // Add logic to initiate a call with the dial code
             if (this.dialCode !== '') {
                 console.log("Calling:", this.dialCode);
+                console.log("Calling:", AppUtils.encodeRFC5987ValueChars(this.dialCode));
 
-                this.sessionId = this.generateSessionId()
+                //check if dial code is allowed
+                if(AppUtils.isDialCodeAllowed(this.dialCode)){
+                    this.sessionId = AppUtils.generateSessionId()
 
-                //let endpoint = 'https://ussd.revenue.co.ke/api/v1/county/ussd?MSISDN=254720709784&SESSIONID=' + this.sessionId + '&DATA=&STAGE=BEGIN&SHORTCODE=%2A604%23'
                 let endpoint = "";
                 endpoint += AppUtils.getURL()
                 endpoint += '?MSISDN=' + AppUtils.getMsisdn()
                 endpoint += '&SESSIONID=' + this.sessionId
                 endpoint += '&STAGE=BEGIN'
                 endpoint += '&DATA=' + this.responseInputCode
-                endpoint += '&SHORTCODE=%2A604%23'
+                endpoint += '&SHORTCODE='+AppUtils.encodeRFC5987ValueChars(this.dialCode)
                 axios
                     .get(endpoint)
                     .then(response => {
@@ -117,12 +110,15 @@ export default {
                     })
                     .catch(error => {
                         console.log(error)
-                        this.handleUSSDErrorResponse()
+                        this.handleUSSDErrorResponse("An error has occurred")
                     })
 
                 this.dialCodeInterface = false;
                 this.callingInterface = true;
                 this.resultInterface = false;
+                }else{
+                    this.handleUSSDErrorResponse("The code is not whitelisted")
+                }
             }
 
         },
@@ -146,8 +142,8 @@ export default {
             this.resultInterface = true;
         },
 
-        handleUSSDErrorResponse() {
-            this.backendResponse = "An error has occurred"
+        handleUSSDErrorResponse(message) {
+            this.backendResponse = message
             this.dialCodeInterface = false;
             this.callingInterface = false;
             this.resultInterface = true;
@@ -160,14 +156,14 @@ export default {
             endpoint += '&SESSIONID=' + this.sessionId
             endpoint += '&STAGE=CONTINUE'
             endpoint += '&DATA=' + this.responseInputCode
-            endpoint += '&SHORTCODE=%2A604%23'
+            endpoint += '&SHORTCODE='+AppUtils.encodeRFC5987ValueChars(this.dialCode)
             this.responseInputCode = null
             AppUtils.sendUssdRequest(endpoint).then(response => {
                 console.log(response)
                 this.handleUSSDOkResponse(response)
             }).catch(error => {
                 console.log(error)
-                this.handleUSSDErrorResponse()
+                this.handleUSSDErrorResponse("An error has occurred")
             });
             this.dialCodeInterface = false;
             this.callingInterface = true;
