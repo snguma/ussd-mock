@@ -5,61 +5,64 @@ export function sendUssdRequest(endpoint, ...args) {
     return axios.get(endpoint, ...args)
 }
 
-export function loadDefaultConfigs() {
-    let configs = process.env.VUE_APP_DEFAULT_CONFIGS
-    let localStorageConfigs = getConfigs()
+export function loadUserConfigs() {
+    let configs = process.env.VUE_APP_USER_CONFIGS
+    let localStorageConfigs = getUserConfigs()
     if (localStorageConfigs.length === 0) {
-        setConfigs(configs)
+        setUserConfigs(configs)
     }
 
 }
 
-export function getConfigs() {
-    let configs = localStorage.getItem(process.env.VUE_APP_LOCAL_STORAGE_NAME) || '[]'
-    configs = isValidJson(configs) ? configs : process.env.VUE_APP_DEFAULT_CONFIGS
+export function getAppConfigs() {
+    let configs = process.env.VUE_APP_DEFAULT_CONFIGS
     return JSON.parse(configs)
 }
 
-export function setConfigs(configs) {
+export function getUserConfigs(){
+    let configs = localStorage.getItem(process.env.VUE_APP_LOCAL_STORAGE_NAME) || '[]'
+    configs = isValidJson(configs) ? configs : process.env.VUE_APP_USER_CONFIGS
+    return JSON.parse(configs)
+}
+
+export function setUserConfigs(configs) {
     localStorage.setItem(process.env.VUE_APP_LOCAL_STORAGE_NAME, JSON.stringify(configs));
 }
 
 export function getMsisdn() {
-    let configs = getConfigs()
+    let configs = getUserConfigs()
     configs = JSON.parse(configs)
     return configs.msisdn
 }
 
 export function getURL() {
     let url = ''
-    let configs = getConfigs()
-    if (configs.active_environment === 'sandbox') {
-        let sandboxConfigs = configs.sandbox
-        url = sandboxConfigs.endpoint
+    let env = getEnvironment()
+    let appConfigs = getAppConfigs()
+    if (env === 'sandbox') {
+        url = appConfigs.sandbox.endpoint
     } else {
-        let liveConfigs = JSON.parse(configs)
-        url = liveConfigs.live.endpoint
+        url = appConfigs.live.endpoint
     }
     return url
 }
 
 export function isDialCodeAllowed(dialCode){
     let allowedCodes = []
-    let configs = getConfigs()
-    if (configs.active_environment === 'sandbox') {
-        let sandboxConfigs = configs.sandbox
-        allowedCodes = sandboxConfigs.codes
+    let appConfigs = getAppConfigs()
+    let env = getEnvironment()
+    if (env === 'sandbox') {
+        allowedCodes = appConfigs.sandbox.codes
     } else {
-        let liveConfigs = JSON.parse(configs)
-        allowedCodes = liveConfigs.live.codes
+        allowedCodes = appConfigs.live.codes
     }
     return allowedCodes.includes(dialCode)
 }
 
 export function getEnvironment(){
-    let configs = getConfigs()
+    let configs = getUserConfigs()
     configs = JSON.parse(configs)
-    return configs.active_environment.toUpperCase()
+    return configs.environment
 }
 
 export function isValidJson(str) {

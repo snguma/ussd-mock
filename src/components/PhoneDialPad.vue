@@ -6,7 +6,7 @@
         <ul>
             <li v-for="digit in digits" :key="digit" @click="appendDigit(digit)">{{ digit.number }} <span>{{ digit.letters
             }}</span></li>
-            <li><i class="fa fa-cog"></i></li>
+            <li @click="showSettingsInterface"><i class="fa fa-cog"></i></li>
             <li @click="call"><i class="fa fa-phone"></i></li>
             <li @click="clearDialedCode"><i class="fa fa-times"></i></li>
         </ul>
@@ -39,10 +39,43 @@
             <p>{{ this.backendResponse }}</p>
         </div>
         <div class="call-input">
-            <input v-model="responseInputCode" type="text" :maxlength="maxDigits" />
+            <input class="form-input" v-show="showResponseInput" v-model="responseInputCode" type="text" :maxlength="maxDigits" />
         </div>
         <div class="send-response-button">
-            <a class="submitButton" @click="submitButton"><i class="fa fa-check"></i></a>
+            <a class="submitButton" v-show="showResponseInput" @click="submitButton"><i class="fa fa-check"></i></a>
+            <a class="cancelButton" @click="cancelCall"><i class="fa fa-times"></i></a>
+        </div>
+    </div>
+    <div class="overlay" v-show="settingsInterface">
+        <div class="calling-info">
+            <h2>Settings</h2>
+        </div>
+        <div class="settings-form">
+            <form>
+                <div class="input-container">
+                    <label class="input-label" for="msisdn">MSISDN</label>
+                    <input class="form-input" v-model="msisdn" type="text" />
+                </div>
+
+                <div class="input-container">
+                    <label class="input-label" for="environment">Environment</label>
+                </div>
+
+                <div class="form-radio-select">
+                    <div class="radio-select-button">
+                        <input type="radio" value="sandbox" v-model="environment" name="chkEnvironment" />
+                        <label class="btn btn-default" for="a25">Sandbox</label>
+                    </div>
+                    <div class="radio-select-button">
+                        <input type="radio" value="live" v-model="environment" name="chkEnvironment" />
+                        <label class="btn btn-default" for="a50">Live</label>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <div class="send-response-button">
+            <a class="submitButton" @click="saveSettings"><i class="fa fa-save"></i></a>
             <a class="cancelButton" @click="cancelCall"><i class="fa fa-times"></i></a>
         </div>
     </div>
@@ -59,10 +92,14 @@ export default {
             dialCodeInterface: true,
             callingInterface: false,
             resultInterface: false,
+            showResponseInput: false,
+            settingsInterface: false,
             backendResponse: "",
             environment: "",
             maxDigits: 10,
             sessionId: null,
+            appSettings: null,
+            msisdn: null,
             digits: [
                 { 'number': 1, 'letters': '&' },
                 { 'number': 2, 'letters': 'abc' },
@@ -89,35 +126,33 @@ export default {
             this.environment = AppUtils.getEnvironment()
             // Add logic to initiate a call with the dial code
             if (this.dialCode !== '') {
-                console.log("Calling:", this.dialCode);
-                console.log("Calling:", AppUtils.encodeRFC5987ValueChars(this.dialCode));
-
                 //check if dial code is allowed
-                if(AppUtils.isDialCodeAllowed(this.dialCode)){
+                if (AppUtils.isDialCodeAllowed(this.dialCode)) {
                     this.sessionId = AppUtils.generateSessionId()
 
-                let endpoint = "";
-                endpoint += AppUtils.getURL()
-                endpoint += '?MSISDN=' + AppUtils.getMsisdn()
-                endpoint += '&SESSIONID=' + this.sessionId
-                endpoint += '&STAGE=BEGIN'
-                endpoint += '&DATA=' + this.responseInputCode
-                endpoint += '&SHORTCODE='+AppUtils.encodeRFC5987ValueChars(this.dialCode)
-                axios
-                    .get(endpoint)
-                    .then(response => {
-                        console.log(response)
-                        this.handleUSSDOkResponse(response)
-                    })
-                    .catch(error => {
-                        console.log(error)
-                        this.handleUSSDErrorResponse("An error has occurred")
-                    })
+                    let endpoint = "";
+                    endpoint += AppUtils.getURL()
+                    endpoint += '?MSISDN=' + AppUtils.getMsisdn()
+                    endpoint += '&SESSIONID=' + this.sessionId
+                    endpoint += '&STAGE=BEGIN'
+                    endpoint += '&DATA=' + this.responseInputCode
+                    endpoint += '&SHORTCODE=' + AppUtils.encodeRFC5987ValueChars(this.dialCode)
+                    axios
+                        .get(endpoint)
+                        .then(response => {
+                            console.log(response)
+                            this.handleUSSDOkResponse(response)
+                        })
+                        .catch(error => {
+                            console.log(error)
+                            this.handleUSSDErrorResponse("An error has occurred")
+                        })
 
-                this.dialCodeInterface = false;
-                this.callingInterface = true;
-                this.resultInterface = false;
-                }else{
+                    this.dialCodeInterface = false;
+                    this.callingInterface = true;
+                    this.resultInterface = false;
+                    this.settingsInterface = false;
+                } else {
                     this.handleUSSDErrorResponse("The code is not whitelisted")
                 }
             }
@@ -127,11 +162,12 @@ export default {
             console.log("Clear Dialed Numbers");
             this.dialCode = ''
         },
+
         cancelCall() {
-            console.log("Cancel Call:", this.dialCode);
             this.dialCodeInterface = true;
             this.callingInterface = false;
             this.resultInterface = false;
+            this.settingsInterface = false;
         },
 
         handleUSSDOkResponse(response) {
@@ -141,6 +177,8 @@ export default {
             this.dialCodeInterface = false;
             this.callingInterface = false;
             this.resultInterface = true;
+            this.showResponseInput = true;
+            this.settingsInterface = false;
         },
 
         handleUSSDErrorResponse(message) {
@@ -148,6 +186,23 @@ export default {
             this.dialCodeInterface = false;
             this.callingInterface = false;
             this.resultInterface = true;
+            this.settingsInterface = false;
+            this.showResponseInput = false;
+        },
+
+        showSettingsInterface() {
+            this.msisdn = AppUtils.getMsisdn()
+            this.environment = AppUtils.getEnvironment()
+            this.dialCodeInterface = false;
+            this.callingInterface = false;
+            this.resultInterface = false;
+            this.settingsInterface = true;
+        },
+
+        saveSettings() {
+            let configs = '{"environment": "'+this.environment+'", "msisdn": "'+this.msisdn+'"}'
+            AppUtils.setUserConfigs(configs)
+            this.handleUSSDErrorResponse("Saved Successfully")
         },
 
         submitButton() {
@@ -157,7 +212,7 @@ export default {
             endpoint += '&SESSIONID=' + this.sessionId
             endpoint += '&STAGE=CONTINUE'
             endpoint += '&DATA=' + this.responseInputCode
-            endpoint += '&SHORTCODE='+AppUtils.encodeRFC5987ValueChars(this.dialCode)
+            endpoint += '&SHORTCODE=' + AppUtils.encodeRFC5987ValueChars(this.dialCode)
             this.responseInputCode = null
             AppUtils.sendUssdRequest(endpoint).then(response => {
                 console.log(response)
@@ -169,10 +224,11 @@ export default {
             this.dialCodeInterface = false;
             this.callingInterface = true;
             this.resultInterface = false;
+            this.settingsInterface = false;
         }
     },
     mounted() {
-        AppUtils.loadDefaultConfigs()
+        AppUtils.loadUserConfigs()
     },
 
 

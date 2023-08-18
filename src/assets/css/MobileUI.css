@@ -1,19 +1,26 @@
-ul, i, p, h2, h3{
+ul,
+i,
+p,
+h2,
+h3 {
     margin: 0;
     padding: 0;
     list-style: none;
 }
-body{
+
+body {
     background: #DDD;
     font-family: 'Archivo Narrow', sans-serif;
 }
-#page-wrap{
+
+#page-wrap {
     display: flex;
     justify-content: space-around;
     flex-direction: row;
     flex-wrap: wrap;
 }
-.layout-container{
+
+.layout-container {
     width: 350px;
     height: 600px;
     background: #282832 url('https://cloud.githubusercontent.com/assets/8037580/18605179/85a080d2-7cbd-11e6-9079-ec09a8024662.png')repeat;
@@ -24,36 +31,43 @@ body{
     margin: 20px;
     animation: slideInDown .8s ease-in-out;
 }
-.layout-container.user-bg{
+
+.layout-container.user-bg {
     background: url('https://cloud.githubusercontent.com/assets/8037580/20611513/e4c939c8-b2e6-11e6-96d7-97bf68ee4e9b.jpg')no-repeat;
     background-size: cover;
     background-position: 50% 0;
 }
-.layout-container.caller-bg{
+
+.layout-container.caller-bg {
     background: url('https://cloud.githubusercontent.com/assets/8037580/20611514/e4ca301c-b2e6-11e6-8fa3-ec461a872551.jpg')no-repeat;
     background-size: cover;
     background-position: 50% 50%;
 }
-.top-bar{
+
+.top-bar {
     background: rgba(75, 75, 75, .8);
     position: absolute;
     width: 100%;
     height: 25px;
     z-index: 20;
 }
-.bar-icons{
+
+.bar-icons {
     padding: 3px;
     display: flex;
     justify-content: space-between;
     color: #FFF;
 }
-.bar-icons i{
-    margin-left: 2px; 
+
+.bar-icons i {
+    margin-left: 2px;
 }
-.bar-icons small{
+
+.bar-icons small {
     font-size: 13px;
 }
-.phone-to-call h2{
+
+.phone-to-call h2 {
     font-size: 25px;
     color: #FAFAFA;
     position: absolute;
@@ -62,9 +76,10 @@ body{
     padding-top: 30px;
     left: 80px;
 }
-.phone-to-call input{
+
+.phone-to-call input {
     position: absolute;
-    top:40px;
+    top: 40px;
     left: 80px;
     width: 270px;
     height: 40px;
@@ -77,22 +92,26 @@ body{
     padding-top: 30px;
     left: 40px;
 }
-.phone-to-call p{
+
+.phone-to-call p {
     position: absolute;
-    top:85px;
+    top: 85px;
     left: 160px;
     font-size: 13px;
     color: #FFF;
 }
-.input-control::-webkit-input-placeholder{
+
+.input-control::-webkit-input-placeholder {
     color: #777;
 }
-.phone-dialpad{
+
+.phone-dialpad {
     position: absolute;
-    top:120px;
+    top: 120px;
     left: 5px;
 }
-.phone-dialpad li{
+
+.phone-dialpad li {
     display: inline-flex;
     padding: 10px;
     margin: 8px 15px;
@@ -104,28 +123,34 @@ body{
     cursor: pointer;
     line-height: 20px;
 }
-.phone-dialpad li:hover{
+
+.phone-dialpad li:hover {
     background: rgba(255, 255, 255, .4);
 }
-.phone-dialpad li span{
+
+.phone-dialpad li span {
     font-size: 8px;
     display: flex;
     justify-content: center;
 }
-.phone-dialpad li:nth-child(14){
+
+.phone-dialpad li:nth-child(14) {
     background: rgb(12, 101, 16);
 }
-.phone-dialpad li:nth-child(14):hover{
+
+.phone-dialpad li:nth-child(14):hover {
     background: rgba(12, 101, 16, .5);
 }
- .phone-dialpad li:nth-child(13) i,
- .phone-dialpad li:nth-child(14) i,
- .phone-dialpad li:nth-child(15) i{
+
+.phone-dialpad li:nth-child(13) i,
+.phone-dialpad li:nth-child(14) i,
+.phone-dialpad li:nth-child(15) i {
     line-height: 35px;
     font-size: 25px;
     color: #FAFAFA;
 }
-.phone-dialpad li{
+
+.phone-dialpad li {
     text-decoration: none;
     color: #FAFAFA;
     text-transform: uppercase;
@@ -133,23 +158,27 @@ body{
     display: inline-block;
     text-align: center;
 }
-.calling-info{
+
+.calling-info {
     position: absolute;
-    top:30px;
+    top: 30px;
     width: 100%;
     color: #FAFAFA;
 }
-.calling-info h2{
+
+.calling-info h2 {
     font-size: 25px;
     font-weight: 300;
     text-align: center;
     margin-top: 20px;
 }
-.calling-info p{
+
+.calling-info p {
     text-align: center;
     margin: 0 15px 20px 15px;
 }
-.calling-info small{
+
+.calling-info small {
     padding: 10px;
     border-radius: 20px;
     margin-top: 10px;
@@ -158,17 +187,20 @@ body{
     background: #C11B17;
     text-transform: uppercase;
 }
-.overlay{
+
+.overlay {
     background: rgba(75, 75, 75, .8);
     width: 100%;
     height: 100%;
 }
-.call-icons{
+
+.call-icons {
     position: absolute;
-    top:200px;
+    top: 200px;
     left: 5px;
 }
-.call-icons li{
+
+.call-icons li {
     display: inline-flex;
     border: 1px solid rgba(255, 255, 255, .6);
     background: transparent;
@@ -183,42 +215,50 @@ body{
     flex-flow: row wrap;
     line-height: 20px;
 }
-.call-icons li:hover{
+
+.call-icons li:hover {
     background: rgba(255, 255, 255, .4);
 }
-.call-icons li a i{
+
+.call-icons li a i {
     font-size: 30px;
     margin: 10px 10px;
     display: flex;
     justify-content: center;
 }
-.call-icons li span{
+
+.call-icons li span {
     font-size: 12px;
     display: flex;
     justify-content: center;
     margin-top: 25px;
 }
-.end-call-button{
+
+.end-call-button {
     position: absolute;
-    bottom:0;
+    bottom: 0;
     background: #C11B17;
     width: 100%;
 }
-.end-call-button span{
+
+.end-call-button span {
     display: flex;
     justify-content: center;
 }
-.end-call-button i{
+
+.end-call-button i {
     transform: rotate(135deg);
     font-size: 60px;
     color: #FFF;
     display: flex;
     justify-content: center;
 }
-.end-call-button a{
+
+.end-call-button a {
     cursor: pointer;
 }
-.caller-status{
+
+.caller-status {
     position: absolute;
     color: #888;
     width: 100%;
@@ -227,7 +267,8 @@ body{
     justify-content: center;
     z-index: 20;
 }
-.caller-status h2{
+
+.caller-status h2 {
     font-size: 15px;
     font-weight: 200;
     color: #000;
@@ -238,13 +279,15 @@ body{
     text-align: center;
     text-transform: uppercase;
 }
-.caller-info{
+
+.caller-info {
     position: absolute;
     top: 25px;
     left: 0;
     width: 100%;
 }
-.caller-info h2{
+
+.caller-info h2 {
     font-size: 25px;
     color: #FAFAFA;
     font-weight: 200;
@@ -253,54 +296,64 @@ body{
     display: flex;
     justify-content: center;
 }
-.caller-info p{
+
+.caller-info p {
     margin: 0;
     color: #FAFAFA;
     padding: 0 20px 20px 10px;
     text-align: center;
 }
-.user-buttons{
+
+.user-buttons {
     position: absolute;
     width: 60px;
     height: 60px;
     font-size: 30px;
     border-radius: 50%;
     outline: 0;
-    border: 0; 
+    border: 0;
     color: #FFF;
     cursor: pointer;
     text-decoration: none;
     display: flex;
     justify-content: center;
 }
-.call-to-action i{
+
+.call-to-action i {
     margin: 15px 0;
 }
-.call-to-action p{
+
+.call-to-action p {
     font-size: 12px;
     padding-top: 5px;
 }
-.user-buttons.answer{
+
+.user-buttons.answer {
     background: rgb(12, 101, 16);
     top: 500px;
     left: 30px;
 }
-.user-buttons.answer:hover{
+
+.user-buttons.answer:hover {
     background: rgba(12, 101, 16, .7);
 }
-.user-buttons.end{
+
+.user-buttons.end {
     top: 500px;
     left: 270px;
     background: rgb(223, 41, 80);
 }
-.user-buttons.end:hover{
+
+.user-buttons.end:hover {
     background: rgba(223, 41, 80, .7)
 }
-.user-buttons i{
+
+.user-buttons i {
     display: flex;
     justify-content: center;
 }
-.user-buttons.message{
+
+.user-buttons.message {
     top: 400px;
     left: 30px;
     background: transparent;
@@ -308,11 +361,13 @@ body{
     color: #FFF;
     border-radius: 25px;
 }
+
 .user-buttons.message:hover,
-.user-buttons.silent:hover{
+.user-buttons.silent:hover {
     background: rgba(255, 255, 255, .4);
 }
-.user-buttons.silent{
+
+.user-buttons.silent {
     top: 400px;
     left: 270px;
     background: transparent;
@@ -320,29 +375,36 @@ body{
     color: #FFF;
     border-radius: 25px;
 }
-.user-buttons.end i{
+
+.user-buttons.end i {
     transform: rotate(135deg);
     color: #FFF;
 }
-.user-buttons .message i{
+
+.user-buttons .message i {
     color: #FFF;
 }
-.user-buttons .answer i{
+
+.user-buttons .answer i {
     color: #FFF;
 }
-.right-icons span:nth-of-type(3) i{
+
+.right-icons span:nth-of-type(3) i {
     transform: rotate(-90deg);
     font-size: 12px;
 }
-.right-icons small{
+
+.right-icons small {
     font-size: 15px;
 }
-.add-ons{
+
+.add-ons {
     position: absolute;
     bottom: 15px;
-    left:50px;
+    left: 50px;
 }
-.add-ons li{
+
+.add-ons li {
     display: inline-flex;
     padding: 10px;
     margin: 10px 15px;
@@ -351,14 +413,17 @@ body{
     cursor: pointer;
     /*border: 1px solid rgba(255, 255, 255, .5);*/
 }
-.add-ons li a{
+
+.add-ons li a {
     color: #FFF;
     text-decoration: none;
 }
-.add-ons li:hover a{
+
+.add-ons li:hover a {
     color: rgba(75, 75, 75, 10);
 }
-.add-ons li:nth-child(2){
+
+.add-ons li:nth-child(2) {
     background: #609;
     border-radius: 20px;
     width: 50px;
@@ -368,7 +433,7 @@ body{
 
 .call-result {
     position: absolute;
-    top:120px;
+    top: 120px;
     width: 100%;
     color: white;
     text-align: center;
@@ -377,35 +442,38 @@ body{
 
 .call-input {
     position: absolute;
-    top:400px;
+    top: 350px;
     color: white;
+    width: 100%;
 }
 
 .call-input input {
     height: 20px;
     border: #3a78dc;
-    width: 25em;
-    margin-left: 5px;
+    margin-left: 0.6em;
     border-radius: 8px;
 }
 
 
-.send-response-button{
+.send-response-button {
     position: absolute;
-    top:450px;
+    top: 450px;
     display: flex;
 }
-.send-response-button span{
+
+.send-response-button span {
     display: flex;
     justify-content: center;
 }
-.send-response-button i{
+
+.send-response-button i {
     font-size: 60px;
     color: #FFF;
     display: flex;
     justify-content: center;
 }
-.send-response-button a{
+
+.send-response-button a {
     cursor: pointer;
 }
 
@@ -422,3 +490,69 @@ body{
     margin-left: 4em;
     width: 8em;
 }
+
+.settings-form {
+    position: absolute;
+    top: 8em;
+    width: 100%;
+    color: white;
+    text-align: center;
+}
+
+.settings-form form {
+    margin: 1em auto;
+    padding: .5em 0;
+    width: 20em;
+    height: auto;
+    border-radius: 4px
+}
+
+.form-input {
+  display: block;
+  margin: .5em auto;
+  padding: .75em;
+  width: 90%;
+  border: 0;
+  border-radius: 4px;
+  background: #E6E6FA;
+}
+
+
+.form-radio-select {
+    width: 100%;
+    margin-left: 25px;
+}
+
+.radio-select-button {
+    float: left;
+    margin: 0.6em 5px 0 0;
+    width: 40%;
+    height: 40px;
+    position: relative;
+  }
+  
+  .radio-select-button label,
+  .radio-select-button input {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  .radio-select-button input[type="radio"] {
+    opacity: 0.011;
+    z-index: 100;
+  }
+  
+  .radio-select-button input[type="radio"]:checked + label {
+    background: #c89c3c;
+    border-radius: 4px;
+  }
+  
+  .radio-select-button label {
+    cursor: pointer;
+    z-index: 90;
+    line-height: 1.8em;
+  }

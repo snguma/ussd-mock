@@ -1,0 +1,54 @@
+// Variables
+$radius: 4px;
+
+// Placeholder selectors
+%radius {border-radius: $radius;}
+%transition {transition: all .25s;}
+
+/*=Typography=*/
+body,
+input,
+button {font-family: 'Open sans', sans-serif;}
+body {font-size: 16px;}
+input,
+button {font-size: 1em;}
+
+/*=Layout=*/
+body {background: #3498DB;}
+*,
+*:before,
+*:after {box-sizing: border-box;}
+.js-hidden {display: none;}
+/*=Form=*/
+form {
+  margin: 1em auto;
+  padding: .5em 0;
+  width: 20em;/*320px*/
+  height: auto;
+  background: #fff;
+  @extend %radius;
+}
+.input-container:not(:last-child) {margin-bottom: 1em;}
+label {
+  padding: 0 .95em;
+  color: #696969;
+}
+input,
+button {
+  display: block;
+  margin: .5em auto;
+  padding: .75em;
+  width: 90%;
+  border: 0;
+  @extend %radius;
+}
+input {background: #E6E6FA;}
+button {
+  font-weight: bold;
+  background: #ff4523;
+  color: #fff;
+  @extend %transition;
+  &:focus,
+  &:hover {background: lighten(#ff4523, 7%);}
+  &:active {background: darken(#ff4523, 7%);}
+}
