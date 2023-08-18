@@ -42,13 +42,14 @@
             <input v-model="responseInputCode" type="text" :maxlength="maxDigits" />
         </div>
         <div class="send-response-button">
-            <a class="submitButton" @click="submitButton"><i class="fa fa-phone"></i></a>
-            <a class="cancelButton" @click="cancelCall"><i class="fa fa-phone"></i></a>
+            <a class="submitButton" @click="submitButton"><i class="fa fa-check"></i></a>
+            <a class="cancelButton" @click="cancelCall"><i class="fa fa-times"></i></a>
         </div>
     </div>
 </template>
 <script>
 import axios from 'axios'
+import * as AppUtils from '@/utils/AppUtils'
 
 export default {
     data() {
@@ -97,30 +98,31 @@ export default {
             // Add logic to initiate a call with the dial code
             if (this.dialCode !== '') {
                 console.log("Calling:", this.dialCode);
-                
+
                 this.sessionId = this.generateSessionId()
 
+                //let endpoint = 'https://ussd.revenue.co.ke/api/v1/county/ussd?MSISDN=254720709784&SESSIONID=' + this.sessionId + '&DATA=&STAGE=BEGIN&SHORTCODE=%2A604%23'
+                let endpoint = "";
+                endpoint += AppUtils.getURL()
+                endpoint += '?MSISDN=' + AppUtils.getMsisdn()
+                endpoint += '&SESSIONID=' + this.sessionId
+                endpoint += '&STAGE=BEGIN'
+                endpoint += '&DATA=' + this.responseInputCode
+                endpoint += '&SHORTCODE=%2A604%23'
                 axios
-                    .get('https://ussd.revenue.co.ke/api/v1/county/ussd?MSISDN=254720709784&SESSIONID='+this.sessionId+'&DATA=&STAGE=BEGIN&SHORTCODE=%2A604%23')
+                    .get(endpoint)
                     .then(response => {
-                        console.log(response.data)
-                        let responseData = response.data
-                        let splitResponse = responseData.split("|");
-                        this.backendResponse = splitResponse[0]
-                        this.dialCodeInterface = false;
-                        this.callingInterface = false;
-                        this.resultInterface = true;
+                        console.log(response)
+                        this.handleUSSDOkResponse(response)
                     })
                     .catch(error => {
                         console.log(error)
-                        this.backendResponse = "An error has occurred"
-                        this.dialCodeInterface = false;
-                        this.callingInterface = false;
-                        this.resultInterface = true;
+                        this.handleUSSDErrorResponse()
                     })
 
                 this.dialCodeInterface = false;
                 this.callingInterface = true;
+                this.resultInterface = false;
             }
 
         },
@@ -134,10 +136,48 @@ export default {
             this.callingInterface = false;
             this.resultInterface = false;
         },
-        submitButton() {
 
-            console.log("Input: " + this.responseInputCode);
+        handleUSSDOkResponse(response) {
+            let responseData = response.data
+            let splitResponse = responseData.split("|")[0]
+            this.backendResponse = splitResponse
+            this.dialCodeInterface = false;
+            this.callingInterface = false;
+            this.resultInterface = true;
+        },
+
+        handleUSSDErrorResponse() {
+            this.backendResponse = "An error has occurred"
+            this.dialCodeInterface = false;
+            this.callingInterface = false;
+            this.resultInterface = true;
+        },
+
+        submitButton() {
+            let endpoint = "";
+            endpoint += AppUtils.getURL()
+            endpoint += '?MSISDN=' + AppUtils.getMsisdn()
+            endpoint += '&SESSIONID=' + this.sessionId
+            endpoint += '&STAGE=CONTINUE'
+            endpoint += '&DATA=' + this.responseInputCode
+            endpoint += '&SHORTCODE=%2A604%23'
+            this.responseInputCode = null
+            AppUtils.sendUssdRequest(endpoint).then(response => {
+                console.log(response)
+                this.handleUSSDOkResponse(response)
+            }).catch(error => {
+                console.log(error)
+                this.handleUSSDErrorResponse()
+            });
+            this.dialCodeInterface = false;
+            this.callingInterface = true;
+            this.resultInterface = false;
         }
     },
+    mounted() {
+        AppUtils.loadDefaultConfigs()
+    },
+
+
 };
 </script>

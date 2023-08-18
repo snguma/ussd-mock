@@ -75,7 +75,7 @@ body{
     background: none;
     color: #FAFAFA;
     padding-top: 30px;
-    left: 80px;
+    left: 40px;
 }
 .phone-to-call p{
     position: absolute;
@@ -90,7 +90,7 @@ body{
 .phone-dialpad{
     position: absolute;
     top:120px;
-    left: 45px;
+    left: 5px;
 }
 .phone-dialpad li{
     display: inline-flex;
@@ -136,7 +136,7 @@ body{
 .calling-info{
     position: absolute;
     top:30px;
-    left:100px;
+    width: 100%;
     color: #FAFAFA;
 }
 .calling-info h2{
@@ -153,7 +153,6 @@ body{
     padding: 10px;
     border-radius: 20px;
     margin-top: 10px;
-    margin-left: 40px;
     width: 100px;
     color: #FFFFFF;
     background: #C11B17;
@@ -167,7 +166,7 @@ body{
 .call-icons{
     position: absolute;
     top:200px;
-    left: 35px;
+    left: 5px;
 }
 .call-icons li{
     display: inline-flex;
@@ -245,7 +244,7 @@ body{
     left: 0;
     width: 100%;
 }
-.caller-info h3{
+.caller-info h2{
     font-size: 25px;
     color: #FAFAFA;
     font-weight: 200;
@@ -370,7 +369,10 @@ body{
 .call-result {
     position: absolute;
     top:120px;
+    width: 100%;
     color: white;
+    text-align: center;
+    white-space: pre-wrap;
 }
 
 .call-input {
@@ -398,7 +400,6 @@ body{
     justify-content: center;
 }
 .send-response-button i{
-    transform: rotate(135deg);
     font-size: 60px;
     color: #FFF;
     display: flex;
