@@ -60,7 +60,7 @@ export default {
             callingInterface: false,
             resultInterface: false,
             backendResponse: "",
-            environment: AppUtils.getEnvironment(),
+            environment: "",
             maxDigits: 10,
             sessionId: null,
             digits: [
@@ -86,6 +86,7 @@ export default {
             }
         },
         call() {
+            this.environment = AppUtils.getEnvironment()
             // Add logic to initiate a call with the dial code
             if (this.dialCode !== '') {
                 console.log("Calling:", this.dialCode);
