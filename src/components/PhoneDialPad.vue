@@ -39,7 +39,8 @@
             <p>{{ this.backendResponse }}</p>
         </div>
         <div class="call-input">
-            <input class="form-input" v-show="showResponseInput" v-model="responseInputCode" type="text" :maxlength="maxDigits" />
+            <input class="form-input" v-show="showResponseInput" v-model="responseInputCode" type="text"
+                :maxlength="maxDigits" />
         </div>
         <div class="send-response-button">
             <a class="submitButton" v-show="showResponseInput" @click="submitButton"><i class="fa fa-check"></i></a>
@@ -133,10 +134,8 @@ export default {
                     let endpoint = "";
                     endpoint += AppUtils.getURL()
                     endpoint += '?MSISDN=' + AppUtils.getMsisdn()
-                    endpoint += '&SESSIONID=' + this.sessionId
-                    endpoint += '&STAGE=BEGIN'
-                    endpoint += '&DATA=' + this.responseInputCode
-                    endpoint += '&SHORTCODE=' + AppUtils.encodeRFC5987ValueChars(this.dialCode)
+                    endpoint += '&sessionid=' + this.sessionId
+                    endpoint += '&input=' + this.responseInputCode
                     axios
                         .get(endpoint)
                         .then(response => {
@@ -159,7 +158,6 @@ export default {
 
         },
         clearDialedCode() {
-            console.log("Clear Dialed Numbers");
             this.dialCode = ''
         },
 
@@ -172,7 +170,7 @@ export default {
 
         handleUSSDOkResponse(response) {
             let responseData = response.data
-            let splitResponse = responseData.split("|")[0]
+            let splitResponse = responseData.substring(4) // remove the CON text at the begining of the response 
             this.backendResponse = splitResponse
             this.dialCodeInterface = false;
             this.callingInterface = false;
@@ -200,7 +198,7 @@ export default {
         },
 
         saveSettings() {
-            let configs = '{"environment": "'+this.environment+'", "msisdn": "'+this.msisdn+'"}'
+            let configs = '{"environment": "' + this.environment + '", "msisdn": "' + this.msisdn + '"}'
             AppUtils.setUserConfigs(configs)
             this.handleUSSDErrorResponse("Saved Successfully")
         },
@@ -209,10 +207,8 @@ export default {
             let endpoint = "";
             endpoint += AppUtils.getURL()
             endpoint += '?MSISDN=' + AppUtils.getMsisdn()
-            endpoint += '&SESSIONID=' + this.sessionId
-            endpoint += '&STAGE=CONTINUE'
-            endpoint += '&DATA=' + this.responseInputCode
-            endpoint += '&SHORTCODE=' + AppUtils.encodeRFC5987ValueChars(this.dialCode)
+            endpoint += '&sessionid=' + this.sessionId
+            endpoint += '&input=' + this.responseInputCode
             this.responseInputCode = null
             AppUtils.sendUssdRequest(endpoint).then(response => {
                 console.log(response)
