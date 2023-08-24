@@ -1,8 +1,10 @@
 import axios from 'axios'
 
-
-export function sendUssdRequest(endpoint, ...args) {
-    return axios.get(endpoint, ...args)
+export function sendUssdRequest(endpoint) {
+    let configs = {
+        timeout: 300000 
+    };
+    return axios.get(endpoint, configs)
 }
 
 export function loadUserConfigs() {

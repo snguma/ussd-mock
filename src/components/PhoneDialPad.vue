@@ -1,6 +1,7 @@
 <template>
     <div class="phone-to-call">
-        <input id="dial-code" v-show="dialCodeInterface" v-model="dialCode" type="text" :maxlength="maxDigits" />
+        <input id="dial-code" ref="dialCode" @keyup.enter="call" v-show="dialCodeInterface" v-model="dialCode" type="text"
+            :maxlength="maxDigits" />
     </div>
     <div class="phone-dialpad" v-show="dialCodeInterface">
         <ul>
@@ -39,8 +40,8 @@
             <p>{{ this.backendResponse }}</p>
         </div>
         <div class="call-input">
-            <input class="form-input" v-show="showResponseInput" v-model="responseInputCode" type="text"
-                :maxlength="maxDigits" />
+            <input id="responseCode" ref="responseCode" @keyup.enter="submitButton" class="form-input"
+                v-show="showResponseInput" v-model="responseInputCode" type="text" />
         </div>
         <div class="send-response-button">
             <a class="submitButton" v-show="showResponseInput" @click="submitButton"><i class="fa fa-check"></i></a>
@@ -118,6 +119,14 @@ export default {
         };
     },
     methods: {
+        focusCodeInput() {
+            this.$refs.dialCode.focus()
+        },
+        focusResponseInputCode() {
+            console.log("Caaling focus")
+            console.log(this.$refs.responseCode)
+            this.$refs.responseCode.focus()
+        },
         appendDigit(digit) {
             if (this.dialCode.length < this.maxDigits) {
                 this.dialCode += digit.number;
@@ -170,13 +179,19 @@ export default {
 
         handleUSSDOkResponse(response) {
             let responseData = response.data
-            let splitResponse = responseData.substring(4) // remove the CON text at the begining of the response 
-            this.backendResponse = splitResponse
-            this.dialCodeInterface = false;
-            this.callingInterface = false;
-            this.resultInterface = true;
-            this.showResponseInput = true;
-            this.settingsInterface = false;
+            let command = responseData.substring(0, 3)
+            let responseTxt = responseData.substring(4)// remove the CON/END text at the begining of the response
+            if (command === 'CON') {
+                this.backendResponse = responseTxt
+                this.focusResponseInputCode()
+                this.dialCodeInterface = false
+                this.callingInterface = false
+                this.resultInterface = true
+                this.showResponseInput = true
+                this.settingsInterface = false
+            }else{
+                this.handleUSSDErrorResponse(responseTxt)
+            }
         },
 
         handleUSSDErrorResponse(message) {
@@ -211,7 +226,6 @@ export default {
             endpoint += '&input=' + this.responseInputCode
             this.responseInputCode = null
             AppUtils.sendUssdRequest(endpoint).then(response => {
-                console.log(response)
                 this.handleUSSDOkResponse(response)
             }).catch(error => {
                 console.log(error)
@@ -225,6 +239,7 @@ export default {
     },
     mounted() {
         AppUtils.loadUserConfigs()
+        this.focusCodeInput()
     },
 
 
