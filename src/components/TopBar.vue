@@ -5,6 +5,7 @@
                 <span>
                     <i class="fa fa-lock"></i>
                 </span>
+                <span> {{ this.phoneNumber }}</span>
             </a>
             <a class="right-icons">
                 <span>
@@ -24,14 +25,17 @@
     </div>
 </template>
 <script>
+import * as AppUtils from '@/utils/AppUtils'
 export default {
     data() {
         return {
-            currentTime: "13:30"
+            currentTime: "13:30",
+            phoneNumber: null
         };
     },
     created() {
         setInterval(this.getNow, 1000);
+        this.getPhoneNumber();
     },
     methods: {
         getNow: function () {
@@ -41,6 +45,10 @@ export default {
             const time = today.getHours() + ":" + minutes;
             const dateTime = time;
             this.currentTime = dateTime;
+        },
+        getPhoneNumber: function() {
+            this.phoneNumber = AppUtils.getMsisdn();
+            console.log(this.phoneNumber);
         }
     },
 }

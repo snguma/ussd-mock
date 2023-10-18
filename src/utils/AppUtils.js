@@ -4,7 +4,7 @@ export function sendUssdRequest(endpoint) {
     let configs = {
         timeout: 300000 
     };
-    return axios.get(endpoint, configs)
+    return axios.post(endpoint, configs)
 }
 
 export function loadUserConfigs() {
