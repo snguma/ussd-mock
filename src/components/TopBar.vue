@@ -48,7 +48,6 @@ export default {
         },
         getPhoneNumber: function() {
             this.phoneNumber = AppUtils.getMsisdn();
-            console.log(this.phoneNumber);
         }
     },
 }

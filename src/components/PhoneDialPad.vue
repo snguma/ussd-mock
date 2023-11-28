@@ -123,7 +123,6 @@ export default {
             this.$refs.dialCode.focus()
         },
         focusResponseInputCode() {
-            console.log("Caaling focus")
             console.log(this.$refs.responseCode)
             this.$refs.responseCode.focus()
         },
@@ -140,20 +139,19 @@ export default {
                 if (AppUtils.isDialCodeAllowed(this.dialCode)) {
                     this.sessionId = AppUtils.generateSessionId()
 
-                    let endpoint = "";
-                    endpoint += AppUtils.getURL()
-                    endpoint += '?MSISDN=' + AppUtils.getMsisdn()
-                    endpoint += '&sessionid=' + this.sessionId
-                    endpoint += '&input=' + this.responseInputCode
+                    let reqData = 'phoneNumber=' + AppUtils.getMsisdn();
+                    reqData += '&serviceCode=*483*615%23'
+                    reqData += '&sessionId=' + this.sessionId
+                    reqData += '&networkCode=63902'
+                    reqData += '&text=' + this.responseInputCode
+                    let reqConfigs = {headers: {'Content-Type': 'text/plain;charset=UTF-8'}};
                     axios
-                        .get(endpoint)
+                        .post(AppUtils.getURL(), reqData, reqConfigs)
                         .then(response => {
-                            console.log(response)
                             this.handleUSSDOkResponse(response)
                         })
                         .catch(error => {
-                            console.log(error)
-                            this.handleUSSDErrorResponse("An error has occurred")
+                            this.handleUSSDErrorResponse("An error has occurred " + error)
                         })
 
                     this.dialCodeInterface = false;
@@ -219,18 +217,25 @@ export default {
         },
 
         submitButton() {
-            let endpoint = "";
-            endpoint += AppUtils.getURL()
-            endpoint += '?MSISDN=' + AppUtils.getMsisdn()
-            endpoint += '&sessionid=' + this.sessionId
-            endpoint += '&input=' + this.responseInputCode
-            this.responseInputCode = null
-            AppUtils.sendUssdRequest(endpoint).then(response => {
-                this.handleUSSDOkResponse(response)
-            }).catch(error => {
-                console.log(error)
-                this.handleUSSDErrorResponse("An error has occurred")
-            });
+            
+
+            let reqData = 'phoneNumber=' + AppUtils.getMsisdn();
+                    reqData += '&serviceCode=*483*615%23'
+                    reqData += '&sessionId=' + this.sessionId
+                    reqData += '&networkCode=63902'
+                    reqData += '&text=' + this.responseInputCode
+                    let reqConfigs = {headers: {'Content-Type': 'text/plain;charset=UTF-8'}};
+                    this.responseInputCode = null
+
+            axios
+             .post(AppUtils.getURL(), reqData, reqConfigs)
+             .then(response => {
+                 this.handleUSSDOkResponse(response)
+             })
+             .catch(error => {
+                 this.handleUSSDErrorResponse("An error has occurred " + error)
+             });
+             
             this.dialCodeInterface = false;
             this.callingInterface = true;
             this.resultInterface = false;
